@@ -1,0 +1,57 @@
+
+text2 = input("Введите зашифрованный текст: ")
+text = ''
+rus_lower = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя"
+rus_upper = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"
+chastota_alph = [0.0896, 0.0197, 0.04, 0.0153, 0.028, 0.0856, 0.0856, 0.0064, 0.0193, 0.0739, 0.0094, 0.0322, 0.0358, 0.0417,
+             0.0662, 0.094, 0.0421, 0.0561, 0.0554, 0.0611, 0.0179, 0.0034, 0.0093, 0.0087, 0.0118, 0.0032, 0.0048,
+             0.0002, 0.0225, 0.0152, 0.0033, 0.0063, 0.0243]
+
+itog_sum = 100000000
+for i in range(1, 33):
+    text = ""
+    summ = 0
+    text3 = text2.lower()
+    for z in range(len(text3)):  # сдвиг текста на шаг i
+        if text3[z].isalpha(): #проверка симвода на пренадлежность к буквам(это буква? O_о)
+            for j in range(33):
+                if text3[z] == rus_lower[j]: # нахождение буквы для сдвига
+                    text += rus_lower[(j + i) % 33] #сдвиг текста на i
+        else:
+            text += text3[z] #запесь символов не из алфовита
+
+    sum_alph = 0  # количество букв в тексте (без символов)
+    for v in range(len(text)):
+        if text[v].isalpha(): #если символ это  буква то кол-во букв прибавляется на 1
+            sum_alph += 1
+    rate_text = [] #частота букв в зашифровнном(сдвинутом) текстом
+    for k in range(33):
+        if rus_lower[k] in text: #если буква есть  в  тексте
+            chastota = text.count(rus_lower[k]) / sum_alph # количество определенной буквы делет на количество всех букв
+            chastota_text.append(chastota) # добавляетсяв масив частоты всех букв зашифрованного текста
+        else:
+            chastota_text.append(0) #что бы не было пропусков в маленьком тексте если буквы нет
+
+    for o in range(33):
+        if chastota_text[o] != 0: #если не пропущенна буква
+            summ += abs(chastota_alph[o] - chastota_text[o]) # модуль разности частоты алфавита и частоты появления букв в зашифрованном тексте
+
+    if summ < itog_sum and summ != 0:
+        itog_sum = summ
+        key = 33 - i
+    
+text = ''
+for i in range(len(text2)):
+    if text2[i].isalpha():
+        if text2[i].isupper():
+            for j in range(33):
+                if text2[i] == rus_upper[j]:
+                    text += rus_upper[(j - key) % 33]
+        elif text2[i].islower():
+            for j in range(33):
+                if text2[i] == rus_lower[j]:
+                    text += rus_lower[(j - key) % 33]
+    else:
+        text += text2[i]
+print("Расшифрованный текст: ", text)
+print("Ключ:",  key)
